@@ -1,0 +1,17 @@
+[general]
+name=GeoNod
+description=Connect to GeoNod, select geodata, and export it directly in QGIS.
+about=GeoNod for QGIS connects your QGIS project to the GeoNod geodata catalog through secure device pairing. Browse available layers, choose an area of interest, create a local export, and add delivered vector and raster data to QGIS. A GeoNod account is required.
+version=1.0.0
+qgisMinimumVersion=3.28
+author=GeoNod
+email=kontakt@geonod.se
+icon=assets/geonod-symbol.svg
+category=Web
+tags=geodata,catalog,sweden,qgis
+homepage=https://github.com/Segl-segl/geonod-qgis#readme
+tracker=https://github.com/Segl-segl/geonod-qgis/issues
+repository=https://github.com/Segl-segl/geonod-qgis
+experimental=False
+deprecated=False
+changelog=1.0.0 - First public release. Secure device pairing, catalog browsing, AOI selection, local exports, and loading delivered vector and raster data into QGIS.
