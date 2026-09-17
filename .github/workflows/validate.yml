@@ -1,0 +1,44 @@
+name: Validate QGIS plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile plugin Python
+        run: python -m compileall -q geonod
+      - name: Build plugin ZIP
+        run: python scripts/package_plugin.py
+      - name: Validate package layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          archive = Path('dist/geonod-qgis-plugin.zip')
+          assert archive.is_file()
+          with ZipFile(archive) as zip_file:
+              names = zip_file.namelist()
+          assert names
+          assert {name.split('/')[0] for name in names if name} == {'geonod'}
+          assert 'geonod/metadata.txt' in names
+          assert 'geonod/LICENSE' in names
+          assert not any('/tests/' in name for name in names)
+          assert not any('__pycache__' in name for name in names)
+          assert not any(name.lower().endswith(('.pem', '.key', '.p12', '.pfx')) for name in names)
+          print(f'Validated {archive} with {len(names)} files')
+          PY
+      - name: Upload plugin ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: geonod-qgis-plugin-1.0.0
+          path: dist/geonod-qgis-plugin.zip
+          if-no-files-found: error
